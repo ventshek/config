@@ -1,23 +1,23 @@
 # init, stage one
 # Definitions
 passphrase=123
-disk=/dev/sda
-dev=/dev/sda3
+disk=/dev/sdb
+dev=/dev/sdb3
 partition=/dev/mapper/cryptlvm
 volgroup=gg
 swap=/dev/gg/swap
 root_dev=/dev/gg/root
-efi=/dev/sda2
+efi=/dev/sdb2
 efi_dir=/mnt/efi
 mnt=/mnt
 # Update pacman
-pacman --noconfirm -Sy
+#  pacman --noconfirm -Sy
 # Install wipe
-pacman --noconfirm -S wipe
+# pacman --noconfirm -S wipe
 # Fill with random data
-dd if=/dev/urandom of=/dev/sda bs=4k #status=progress
+# dd if=/dev/urandom of=/dev/sda bs=4k #status=progress
 # Wipe the drive
-wipe /dev/sda #status=progress
+# wipe /dev/sda #status=progress
 # Partition the drives 
 sfdisk --quiet -- "$disk" <<-'EOF'
     label:gpt
