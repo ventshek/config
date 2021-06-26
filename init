@@ -1,13 +1,13 @@
 # init, stage one
 # Definitions
 passphrase=123
-disk=/dev/sdb
-dev=/dev/sdb3
+disk=/dev/sda
+dev=/dev/sda3
 partition=/dev/mapper/cryptlvm
 volgroup=gg
 swap=/dev/gg/swap
 root_dev=/dev/gg/root
-efi=/dev/sdb2
+efi=/dev/sda2
 efi_dir=/mnt/efi
 mnt=/mnt
 # Update pacman
