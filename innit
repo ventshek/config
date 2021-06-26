@@ -3,7 +3,7 @@
 language=LANG=en_US.UTF-8
 localeconf=/etc/locale.conf
 hostname=Device
-uuid=$(blkid -o value -s UUID /dev/sda3)
+uuid=$(blkid -o value -s UUID /dev/sdb3)
 # Set local time
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 # Write to /etc/locale.gen
@@ -83,7 +83,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # Create crypt key for single password boot
 mkdir /root/secrets && chmod 700 /root/secrets
 head -c 64 /dev/urandom > /root/secrets/crypto_keyfile.bin && chmod 600 /root/secrets/crypto_keyfile.bin
-cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
+cryptsetup -v luksAddKey -i 1 /dev/sdb3 /root/secrets/crypto_keyfile.bin
 # Run Mkinitcpio again
 mkinitcpio -p linux-lts
 # Run grub config again
