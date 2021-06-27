@@ -13,11 +13,6 @@ efi_dir=/mnt/efi
 fstabdir=/mnt/etc/fstab
 # Script
 script=init.sh
-# Pacman packages
-basic="base linux-lts efibootmgr base-devel efitools linux-lts-headers linux-firmware mkinitcpio lvm2"
-extra="top htop wget nano torbrowser-launcher e2fsprogs tor nyx vi git"
-gfx="xf86-video-vesa xfce4 xfce4-goodies sddm network-manager-applet"
-other="dhcpcd wpa_supplicant grub sudo fwbuilder intel-ucode virtualbox virtualbox-host-dkms"
 # Initial Pacman setup
 pacman --noconfirm -Sy
 pacman --noconfirm -S wipe
@@ -34,6 +29,7 @@ sfdisk --quiet --force -- "$disk" <<-'EOF'
     type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B,size=512MiB
     type=0FC63DAF-8483-4772-8E79-3D69D8477DE4
 EOF
+echo 
 # Setup Luks
 echo -en "$luks2" | cryptsetup luksFormat --type luks2 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
 # Open new partition
@@ -61,7 +57,7 @@ swapon -- "$swap"
 # Mount EFI
 mount -- "$efi" "$efi_dir"
 # Pacstrap
-pacstrap "$mnt" "$basic" "$gfx" "$other" "$extra"
+pacstrap "$mnt" base linux-lts efibootmgr base-devel efitools linux-lts-headers linux-firmware mkinitcpio lvm2 top htop wget nano torbrowser-launcher e2fsprogs tor nyx vi git xf86-video-vesa xfce4 xfce4-goodies sddm network-manager-applet dhcpcd wpa_supplicant grub sudo fwbuilder intel-ucode virtualbox virtualbox-host-dkms
 # Generate fstab
 genfstab -U "$mnt" >> "$fstabdir"
 # Remove script
