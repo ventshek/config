@@ -51,9 +51,6 @@ cd yay
 makepkg --noconfirm -si
 # Leave yay directory
 cd
-# Upgrade installs
-yay --noconfirm -Syyu
-yay --noconfirm -S octopi
 # Rewrite Grub
 rm /etc/default/grub
 cat > /etc/default/grub <<EOF
