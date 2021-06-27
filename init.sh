@@ -24,9 +24,9 @@ pacman --noconfirm -S wipe
 echo -n "Enter your luks2 password [ENTER]: "
 read luks2
 # Fill with random data
-# dd if=/dev/urandom of="$disk" bs=4k status=progress
+dd if=/dev/urandom of="$disk" bs=4k status=progress
 # Wipe the drive
-# wipe /dev/sda status=progress
+wipe /dev/sda status=progress
 # Partition the drives
 sfdisk --quiet -- "$disk" <<-'EOF'
     label:gpt
@@ -35,9 +35,9 @@ sfdisk --quiet -- "$disk" <<-'EOF'
     type=0FC63DAF-8483-4772-8E79-3D69D8477DE4
 EOF
 # Setup Luks
-echo -en "$passph" | cryptsetup luksFormat --type luks2 --use-random -S 1 -s 512 -h sha512 -i 5000 "$luks2"
+echo -en "$luks2" | cryptsetup luksFormat --type luks2 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
 # Open new partition
-echo -en "$passph" | cryptsetup luksOpen "$dev" cryptlvm
+echo -en "$luks2" | cryptsetup luksOpen "$dev" cryptlvm
 # Create physical volume
 pvcreate "$partition"
 # Create volume group
