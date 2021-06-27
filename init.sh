@@ -28,7 +28,7 @@ read luks2
 # Wipe the drive
 # wipe /dev/sda status=progress
 # Partition the drives
-sfdisk --quiet -- "$disk" <<-'EOF'
+sfdisk --quiet --force -- "$disk" <<-'EOF'
     label:gpt
     type=21686148-6449-6E6F-744E-656564454649,size=1MiB,attrs=LegacyBIOSBootable,name=bios_boot
     type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B,size=512MiB
