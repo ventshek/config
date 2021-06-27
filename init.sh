@@ -29,7 +29,7 @@ sfdisk --quiet --force -- "$disk" <<-'EOF'
     type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B,size=512MiB
     type=0FC63DAF-8483-4772-8E79-3D69D8477DE4
 EOF
-echo 
+echo "************************Initial Partitioning Complete************************"
 # Setup Luks
 echo -en "$luks2" | cryptsetup luksFormat --type luks2 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
 # Open new partition
@@ -62,6 +62,9 @@ pacstrap "$mnt" base linux-lts efibootmgr base-devel efitools linux-lts-headers 
 genfstab -U "$mnt" >> "$fstabdir"
 # Remove script
 rm "$script"
+# Setup second script
+wget https://github.com/ventshek/i/raw/main/innit.sh
+mv innit.sh /mnt
 # Remove Bash history
 history -c
 # Print the password for disk
