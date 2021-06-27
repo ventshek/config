@@ -2,7 +2,6 @@
 # Unique credentials 
 usrpw=changeme
 rtpw=changeme
-passph=123
 hostname=Device
 usr=user
 rt=root
@@ -13,6 +12,9 @@ localeconf=/etc/locale.conf
 uuid=$(blkid -o value -s UUID /dev/sda3)
 # Directories
 grubcfg=/boot/grub/grub.cfg
+# Take input for luks2
+echo -n "Enter your luks2 password [ENTER]: "
+read luks2
 # Set local time
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 # Write to /etc/locale.gen
@@ -112,7 +114,7 @@ chmod 700 /root/secrets
 # Create subdirectory for key file
 head -c 64 /dev/urandom > /root/secrets/crypto_keyfile.bin && chmod 600 /root/secrets/crypto_keyfile.bin
 # Generate Keys
-echo "$passph" | cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
+echo "$luks2" | cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
 # Edit Mkinitcpio Files
 sed -i 's/FILES=()/FILES=(\/root\/secrets\/crypto_keyfile.bin)/' /etc/mkinitcpio.conf
 # Run Mkinitcpio again
@@ -134,6 +136,9 @@ rm innit.sh
 # Clear Bash History
 history -c
 # Completion message
-echo 'Successfully Completed'
+echo '******************Successfully Installed******************'
+echo '************************$luks2************************'
+echo '************************$rtpw************************'
+echo '************************$usrpw************************'
 # Exit
 exit
