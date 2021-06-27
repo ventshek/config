@@ -1,24 +1,33 @@
 # init, stage one
-# Definitions
-passphrase=123
+# Directories
 disk=/dev/sda
+efi=/dev/sda2
 dev=/dev/sda3
 partition=/dev/mapper/cryptlvm
 volgroup=gg
 swap=/dev/gg/swap
 root_dev=/dev/gg/root
-efi=/dev/sda2
-efi_dir=/mnt/efi
+# Mount points
 mnt=/mnt
-# Update pacman
-#  pacman --noconfirm -Sy
-# Install wipe
-# pacman --noconfirm -S wipe
+efi_dir=/mnt/efi
+fstabdir=/mnt/etc/fstab
+# Script
+script=init.sh
+# Pacman packages
+basic="base linux-lts efibootmgr base-devel efitools linux-lts-headers linux-firmware mkinitcpio lvm2"
+extra="top htop wget nano torbrowser-launcher e2fsprogs tor nyx vi git"
+gfx="xf86-video-vesa xfce4 xfce4-goodies sddm network-manager-applet"
+other="dhcpcd wpa_supplicant grub sudo fwbuilder intel-ucode virtualbox virtualbox-host-dkms"
+# Initial Pacman setup
+pacman --noconfirm -Sy
+pacman --noconfirm -S wipe
+echo -n "Enter your luks2 password [ENTER]: "
+read luks2
 # Fill with random data
-# dd if=/dev/urandom of=/dev/sda bs=4k #status=progress
+dd if=/dev/urandom of="$disk" bs=4k status=progress
 # Wipe the drive
-# wipe /dev/sda #status=progress
-# Partition the drives 
+wipe /dev/sda status=progress
+# Partition the drives
 sfdisk --quiet -- "$disk" <<-'EOF'
     label:gpt
     type=21686148-6449-6E6F-744E-656564454649,size=1MiB,attrs=LegacyBIOSBootable,name=bios_boot
@@ -26,9 +35,9 @@ sfdisk --quiet -- "$disk" <<-'EOF'
     type=0FC63DAF-8483-4772-8E79-3D69D8477DE4
 EOF
 # Setup Luks
-echo -en "$passphrase" | cryptsetup luksFormat --type luks1 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
+echo -en "$passph" | cryptsetup luksFormat --type luks2 --use-random -S 1 -s 512 -h sha512 -i 5000 "$luks2"
 # Open new partition
-echo -en "$passphrase" | cryptsetup luksOpen "$dev" cryptlvm
+echo -en "$passph" | cryptsetup luksOpen "$dev" cryptlvm
 # Create physical volume
 pvcreate "$partition"
 # Create volume group
@@ -52,10 +61,12 @@ swapon -- "$swap"
 # Mount EFI
 mount -- "$efi" "$efi_dir"
 # Pacstrap
-pacstrap /mnt base linux-lts efibootmgr efitools linux-lts-headers e2fsprogs linux-firmware mkinitcpio lvm2 vi dhcpcd wpa_supplicant nano grub sudo xf86-video-vesa xfce4 sddm network-manager-applet fwbuilder intel-ucode tor nyx torbrowser-launcher wget virtualbox virtualbox-host-dkms
+pacstrap "$mnt" "$basic" "$gfx" "$other" "$extra"
 # Generate fstab
-genfstab -U "$mnt" >> /mnt/etc/fstab
-# remove script
-rm init.sh
-# Chroot
-arch-chroot "$mnt"
+genfstab -U "$mnt" >> "$fstabdir"
+# Remove script
+rm "$script"
+# Remove Bash history
+history -c
+# Print the password for disk
+echo "Luks2=$luks2"
