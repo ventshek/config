@@ -24,9 +24,9 @@ pacman --noconfirm -S wipe
 echo -n "Enter your luks2 password [ENTER]: "
 read luks2
 # Fill with random data
-dd if=/dev/urandom of="$disk" bs=4k status=progress
+# dd if=/dev/urandom of="$disk" bs=4k status=progress
 # Wipe the drive
-wipe /dev/sda status=progress
+# wipe /dev/sda status=progress
 # Partition the drives
 sfdisk --quiet -- "$disk" <<-'EOF'
     label:gpt
