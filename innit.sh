@@ -96,7 +96,7 @@ cat > /etc/default/grub <<EOF
 		GRUB_DISABLE_RECOVERY=true
 EOF
 # Add scripts to desktop
-cat > /home/user/update.sh <<EOF
+cat > /home/user/Update.sh <<EOF
 sudo pacman -Syyu
 EOF
 cat > /home/user/System.sh <<EOF
@@ -124,14 +124,13 @@ grub-mkconfig -o "$grubcfg"
 chmod 700 /boot
 # Clear package managers
 pacman --noconfirm -Scc
-yay --noconfirm -Scc
 # Enable Systemd
 systemctl enable NetworkManager
 systemctl enable dhcpcd
 systemctl enable tor
 systemctl enable sddm
 # Remove innit
-rm innit.sh
+rm /innit.sh
 # Clear Bash History
 history -c
 # Completion message
