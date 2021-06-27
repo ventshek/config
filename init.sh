@@ -69,4 +69,4 @@ rm "$script"
 # Remove Bash history
 history -c
 # Print the password for disk
-echo "Luks2=$luks2"
+echo "************************$luks2************************"
