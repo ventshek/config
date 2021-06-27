@@ -1,9 +1,18 @@
 # innit, stage two
-# Definitions
+# Unique credentials 
+usrpw=changeme
+rtpw=changeme
+passph=123
+hostname=Device
+usr=user
+rt=root
+# Language config
 language=LANG=en_US.UTF-8
 localeconf=/etc/locale.conf
-hostname=Device
+# Blkid command
 uuid=$(blkid -o value -s UUID /dev/sda3)
+# Directories
+grubcfg=/boot/grub/grub.cfg
 # Set local time
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 # Write to /etc/locale.gen
@@ -21,86 +30,110 @@ cat > /etc/hosts <<EOF
 EOF
 # Edit Mkinitcpio Hooks
 sed -i 's/HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)/HOOKS=(base udev autodetect keyboard modconf block encrypt lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
-# Edit Mkinitcpio Files
-sed -i 's/FILES=()/FILES=(\/root\/secrets\/crypto_keyfile.bin)/' /etc/mkinitcpio.conf
 # Run Mkinitcpio 
 mkinitcpio -p linux-lts
-# Enable Luks boot in Grub
-sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # Uncomment Wheel in sudoers
-sudo sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
+sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
 # Add user to sudoers etc
-useradd -m -G wheel -s /bin/bash user
-# Add user to vbox
+useradd -m -d /home/user -G wheel -s /bin/bash "$usr"
 usermod -G vboxusers user
-# Remove original grub defaults
-rm /etc/default/grub
+# Set root passwd
+echo "$rt":"$rtpw" | chpasswd
+# Set user passwd
+echo "$usr":"$usrpw" | chpasswd
+# Git yay
+git clone https://aur.archlinux.org/yay.git
+# Enter yay directory
+cd yay
+# Install yay
+makepkg --noconfirm -si
+# Leave yay directory
+cd
+# Upgrade installs
+yay --noconfirm -Syyu
+yay --noconfirm -S octopi
 # Rewrite Grub
+rm /etc/default/grub
 cat > /etc/default/grub <<EOF
-		# GRUB boot loader configuration
+# GRUB boot loader configuration
 
-		GRUB_DEFAULT=0
-		GRUB_TIMEOUT=5
-		GRUB_DISTRIBUTOR="Arch"
-		GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"
-		GRUB_CMDLINE_LINUX="... cryptdevice=UUID=$uuid:cryptlvm root=/dev/gg/root cryptkey=rootfs:/root/secrets/crypto_keyfile.bin"
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="Arch"
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"
+GRUB_CMDLINE_LINUX="... cryptdevice=UUID=$uuid:cryptlvm root=/dev/gg/root cryptkey=rootfs:/root/secrets/crypto_keyfile.bin"
 
-		# Preload both GPT and MBR modules so that they are not missed
-		GRUB_PRELOAD_MODULES="part_gpt part_msdos"
+# Preload both GPT and MBR modules so that they are not missed
+GRUB_PRELOAD_MODULES="part_gpt part_msdos"
 
-		# Uncomment to enable booting from LUKS encrypted devices
-		GRUB_ENABLE_CRYPTODISK=y
+# Uncomment to enable booting from LUKS encrypted devices
+GRUB_ENABLE_CRYPTODISK=y
 
-		# Set to 'countdown' or 'hidden' to change timeout behavior,
-		# press ESC key to display menu.
-		GRUB_TIMEOUT_STYLE=menu
+# Set to 'countdown' or 'hidden' to change timeout behavior,
+# press ESC key to display menu.
+GRUB_TIMEOUT_STYLE=menu
 
-		# Uncomment to use basic console
-		GRUB_TERMINAL_INPUT=console
+# Uncomment to use basic console
+GRUB_TERMINAL_INPUT=console
 
-		# Uncomment to disable graphical terminal
-		#GRUB_TERMINAL_OUTPUT=console
+# Uncomment to disable graphical terminal
+#GRUB_TERMINAL_OUTPUT=console
 
-		# The resolution used on graphical terminal
-		# note that you can use only modes which your graphic card supports via VBE
-		# you can see them in real GRUB with the command vbeinfo
-		GRUB_GFXMODE=auto
+# The resolution used on graphical terminal
+# note that you can use only modes which your graphic card supports via VBE
+# you can see them in real GRUB with the command vbeinfo
+GRUB_GFXMODE=auto
 
-		# Uncomment to allow the kernel use the same resolution used by grub
-		GRUB_GFXPAYLOAD_LINUX=keep
+# Uncomment to allow the kernel use the same resolution used by grub
+GRUB_GFXPAYLOAD_LINUX=keep
 
-		# Uncomment if you want GRUB to pass to the Linux kernel the old parameter
-		# format "root=/dev/xxx" instead of "root=/dev/disk/by-uuid/xxx"
-		#GRUB_DISABLE_LINUX_UUID=true
+# Uncomment if you want GRUB to pass to the Linux kernel the old parameter
+# format "root=/dev/xxx" instead of "root=/dev/disk/by-uuid/xxx"
+#GRUB_DISABLE_LINUX_UUID=true
 
-		# Uncomment to disable generation of recovery mode menu entries
-		GRUB_DISABLE_RECOVERY=true
+# Uncomment to disable generation of recovery mode menu entries
+GRUB_DISABLE_RECOVERY=true
+EOF
+# Add scripts to desktop
+cat > /home/user/update.sh <<EOF
+sudo pacman -Syyu
+EOF
+cat > /home/user/System.sh <<EOF
+htop
 EOF
 # Install Grub
 grub-install --target=x86_64-efi --efi-directory=/efi
 # Create Grub config
 grub-mkconfig -o /boot/grub/grub.cfg
-# Create crypt key for single password boot
-mkdir /root/secrets && chmod 700 /root/secrets
+# Create directory for secrets
+mkdir /root/secrets 
+# Make secrets directory
+chmod 700 /root/secrets
+# Create subdirectory for key file
 head -c 64 /dev/urandom > /root/secrets/crypto_keyfile.bin && chmod 600 /root/secrets/crypto_keyfile.bin
-cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
+# Generate Keys
+echo "$passph" | cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
+# Edit Mkinitcpio Files
+sed -i 's/FILES=()/FILES=(\/root\/secrets\/crypto_keyfile.bin)/' /etc/mkinitcpio.conf
 # Run Mkinitcpio again
 mkinitcpio -p linux-lts
 # Run grub config again
-grub-mkconfig -o /boot/grub/grub.cfg
-# Chmod /boot
+grub-mkconfig -o "$grubcfg"
+# Change permissions for /boot
 chmod 700 /boot
-# Grub config again
-grub-mkconfig -o /boot/grub/grub.cfg
-# Enable NetworkManager
+# Clear package managers
+pacman --noconfirm -Scc
+yay --noconfirm -Scc
+# Enable Systemd
 systemctl enable NetworkManager
-# Enable dhcpcd
 systemctl enable dhcpcd
-# Enable tor
 systemctl enable tor
-# Enable sddm
 systemctl enable sddm
+# Remove innit
+rm innit.sh
 # Clear Bash History
 history -c
-# Remove innit
-rm innit
+# Completion message
+echo 'Successfully Completed'
+# Exit
+exit
