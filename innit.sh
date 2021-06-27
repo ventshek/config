@@ -1,7 +1,5 @@
 # innit, stage two
-# Unique credentials 
-usrpw=changeme
-rtpw=changeme
+# Definitions 
 hostname=Device
 usr=user
 rt=root
@@ -15,6 +13,10 @@ grubcfg=/boot/grub/grub.cfg
 # Take input for luks2
 echo -n "Enter your luks2 password [ENTER]: "
 read luks2
+echo -n "Enter your root password [ENTER]: "
+read rtpw
+echo -n "Enter your user password [ENTER]: "
+read usrpw
 # Set local time
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 # Write to /etc/locale.gen
@@ -54,44 +56,44 @@ cd
 # Rewrite Grub
 rm /etc/default/grub
 cat > /etc/default/grub <<EOF
-# GRUB boot loader configuration
+		# GRUB boot loader configuration
 
-GRUB_DEFAULT=0
-GRUB_TIMEOUT=5
-GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"
-GRUB_CMDLINE_LINUX="... cryptdevice=UUID=$uuid:cryptlvm root=/dev/gg/root cryptkey=rootfs:/root/secrets/crypto_keyfile.bin"
+		GRUB_DEFAULT=0
+		GRUB_TIMEOUT=5
+		GRUB_DISTRIBUTOR="Arch"
+		GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"
+		GRUB_CMDLINE_LINUX="... cryptdevice=UUID=$uuid:cryptlvm root=/dev/gg/root cryptkey=rootfs:/root/secrets/crypto_keyfile.bin"
 
-# Preload both GPT and MBR modules so that they are not missed
-GRUB_PRELOAD_MODULES="part_gpt part_msdos"
+		# Preload both GPT and MBR modules so that they are not missed
+		GRUB_PRELOAD_MODULES="part_gpt part_msdos"
 
-# Uncomment to enable booting from LUKS encrypted devices
-GRUB_ENABLE_CRYPTODISK=y
+		# Uncomment to enable booting from LUKS encrypted devices
+		GRUB_ENABLE_CRYPTODISK=y
 
-# Set to 'countdown' or 'hidden' to change timeout behavior,
-# press ESC key to display menu.
-GRUB_TIMEOUT_STYLE=menu
+		# Set to 'countdown' or 'hidden' to change timeout behavior,
+		# press ESC key to display menu.
+		GRUB_TIMEOUT_STYLE=menu
 
-# Uncomment to use basic console
-GRUB_TERMINAL_INPUT=console
+		# Uncomment to use basic console
+		GRUB_TERMINAL_INPUT=console
 
-# Uncomment to disable graphical terminal
-#GRUB_TERMINAL_OUTPUT=console
+		# Uncomment to disable graphical terminal
+		#GRUB_TERMINAL_OUTPUT=console
 
-# The resolution used on graphical terminal
-# note that you can use only modes which your graphic card supports via VBE
-# you can see them in real GRUB with the command vbeinfo
-GRUB_GFXMODE=auto
+		# The resolution used on graphical terminal
+		# note that you can use only modes which your graphic card supports via VBE
+		# you can see them in real GRUB with the command vbeinfo
+		GRUB_GFXMODE=auto
 
-# Uncomment to allow the kernel use the same resolution used by grub
-GRUB_GFXPAYLOAD_LINUX=keep
+		# Uncomment to allow the kernel use the same resolution used by grub
+		GRUB_GFXPAYLOAD_LINUX=keep
 
-# Uncomment if you want GRUB to pass to the Linux kernel the old parameter
-# format "root=/dev/xxx" instead of "root=/dev/disk/by-uuid/xxx"
-#GRUB_DISABLE_LINUX_UUID=true
+		# Uncomment if you want GRUB to pass to the Linux kernel the old parameter
+		# format "root=/dev/xxx" instead of "root=/dev/disk/by-uuid/xxx"
+		#GRUB_DISABLE_LINUX_UUID=true
 
-# Uncomment to disable generation of recovery mode menu entries
-GRUB_DISABLE_RECOVERY=true
+		# Uncomment to disable generation of recovery mode menu entries
+		GRUB_DISABLE_RECOVERY=true
 EOF
 # Add scripts to desktop
 cat > /home/user/update.sh <<EOF
@@ -134,8 +136,7 @@ rm innit.sh
 history -c
 # Completion message
 echo "******************Successfully Installed******************"
-echo "************************$luks2************************"
-echo "************************$rtpw************************"
-echo "************************$usrpw************************"
+echo "Grub Password = $luks2"
+echo "User Password = $usrpw"
 # Exit
 exit
