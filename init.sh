@@ -14,10 +14,9 @@ fstabdir=/mnt/etc/fstab
 # Script
 script=init.sh
 # Initial Pacman setup
-pacman --noconfirm -Sy
-pacman --noconfirm -S wipe
+pacman --quiet --noprogressbar --noconfirm -Sy wipe wget
 echo -n "Enter your luks2 password [ENTER]: "
-read luks2
+read luks1
 # Fill with random data
 # dd if=/dev/urandom of="$disk" bs=4k status=progress
 # Wipe the drive
@@ -31,9 +30,9 @@ sfdisk --quiet --force -- "$disk" <<-'EOF'
 EOF
 echo "************************Initial Partitioning Complete************************"
 # Setup Luks
-echo -en "$luks2" | cryptsetup luksFormat --type luks1 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
+echo -en "$luks1" | cryptsetup luksFormat --type luks1 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
 # Open new partition
-echo -en "$luks2" | cryptsetup luksOpen "$dev" cryptlvm
+echo -en "$luks1" | cryptsetup luksOpen "$dev" cryptlvm
 # Create physical volume
 pvcreate "$partition"
 # Create volume group
@@ -48,16 +47,14 @@ mkswap -- "$swap"
 mkfs.ext4 -q -L -- "$root_dev"
 # Format EFI
 mkfs.fat -F32 -- "$efi"
-# Mount root
+# Mount all disks
 mount -- "$root_dev" "$mnt"
-# Make efi directory
 mkdir -- "$efi_dir"
-# Mount swap
 swapon -- "$swap"
-# Mount EFI
 mount -- "$efi" "$efi_dir"
-# Pacstrap
-pacstrap "$mnt" base linux-lts efibootmgr base-devel efitools linux-lts-headers linux-firmware mkinitcpio lvm2 htop wget nano torbrowser-launcher e2fsprogs tor nyx vi git xf86-video-vesa xfce4 xfce4-goodies sddm network-manager-applet dhcpcd wpa_supplicant grub sudo fwbuilder intel-ucode virtualbox virtualbox-host-dkms
+echo "************************All Partitioning Complete************************"
+# Pacstrap all packages
+pacstrap --quiet --noprogressbar --noconfirm "$mnt" base linux-lts efibootmgr base-devel efitools linux-lts-headers go linux-firmware mkinitcpio lvm2 htop wget nano torbrowser-launcher e2fsprogs tor nyx vi git xf86-video-vesa xfce4 xfce4-goodies sddm network-manager-applet dhcpcd wpa_supplicant grub sudo fwbuilder intel-ucode virtualbox virtualbox-host-dkms
 # Generate fstab
 genfstab -U "$mnt" >> "$fstabdir"
 # Remove script
@@ -68,4 +65,4 @@ mv innit.sh /mnt
 # Remove Bash history
 history -c
 # Print the password for disk
-echo "************************$luks2************************"
+echo "Disk Password = $luks1"
