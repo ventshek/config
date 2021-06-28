@@ -66,3 +66,74 @@ mv innit.sh /mnt
 history -c
 # Print the password for disk
 echo "Disk Password = $luks1"
+
+echo '- Running additional setup in chroot.'
+arch-chroot -- "$mount_dir" /bin/bash -s -- "$loop_dev" <<-'EOS'
+	set -eEuo pipefail
+	trap 'echo "Error: \`$BASH_COMMAND\` exited with status $?"' ERR
+	echo '-- Configuring time.'
+	ln -sf /usr/share/zoneinfo/UTC /etc/localtime
+	gawk -i assert -i inplace '
+		/^#NTP=/ { $0 = "NTP=metadata.google.internal"; ++f }
+		{ print } END { assert(f == 1, "f == 1") }' /etc/systemd/timesyncd.conf
+	systemctl --quiet enable systemd-timesyncd.service
+	echo '-- Configuring locale.'
+	gawk -i assert -i inplace '
+		/^#en_US\.UTF-8 UTF-8\s*$/ { $0 = substr($0, 2); ++f }
+		{ print } END { assert(f == 1, "f == 1") }' /etc/locale.gen
+	locale-gen
+	echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+	echo '-- Configuring journald.'
+	gawk -i assert -i inplace '
+		/^#ForwardToConsole=/ { $0 = "ForwardToConsole=yes"; ++f }
+		{ print } END { assert(f == 1, "f == 1") }' /etc/systemd/journald.conf
+	echo '-- Configuring ssh.'
+	gawk -i assert -i inplace '
+		/^#PasswordAuthentication / { $0 = "PasswordAuthentication no"; ++f1 }
+		/^#PermitRootLogin / { $0 = "PermitRootLogin no"; ++f2 }
+		{ print } END { assert(f1 * f2 == 1, "f == 1") }' /etc/ssh/sshd_config
+	systemctl --quiet enable sshd.service
+	echo '-- Configuring pacman.'
+	curl --silent --show-error -o /etc/pacman.d/mirrorlist \
+		'https://archlinux.org/mirrorlist/?country=all&ip_version=4&use_mirror_status=on'
+	gawk -i assert -i inplace '
+		/^#Server / { $0 = substr($0, 2); ++f }
+		{ print } END { assert(f > 0, "f > 0") }' /etc/pacman.d/mirrorlist
+	cat <<-'EOF' > /etc/systemd/system/pacman-init.service
+		[Unit]
+		Description=Pacman keyring initialization
+		ConditionDirectoryNotEmpty=!/etc/pacman.d/gnupg
+		[Service]
+		Type=oneshot
+		RemainAfterExit=yes
+		ExecStart=/usr/bin/pacman-key --init
+		ExecStart=/usr/bin/pacman-key --populate archlinux
+		[Install]
+		WantedBy=multi-user.target
+	EOF
+	systemctl --quiet enable pacman-init.service
+	echo '-- Enabling other services.'
+	systemctl --quiet enable dhclient@eth0.service growpartfs@-.service
+	echo '-- Configuring initcpio.'
+	gawk -i assert -i inplace '
+		/^MODULES=/ { $0 = "MODULES=(virtio_pci virtio_scsi sd_mod ext4)"; ++f1 }
+		/^BINARIES=/ { $0 = "BINARIES=(fsck fsck.ext4)"; ++f2 }
+		/^HOOKS=/ { $0 = "HOOKS=(base modconf)"; ++f3 }
+		{ print } END { assert(f1 * f2 * f3 == 1, "f == 1") }' /etc/mkinitcpio.conf
+	gawk -i assert -i inplace '
+		/^PRESETS=/ { $0 = "PRESETS=(default)"; ++f }
+		/#?fallback_/ { next }
+		{ print } END { assert(f == 1, "f == 1") }' /etc/mkinitcpio.d/linux.preset
+	rm /boot/initramfs-linux-fallback.img
+	mkinitcpio --nocolor --preset linux
+	echo '-- Configuring grub.'
+	grub-install --target=i386-pc -- "$1"
+	cat <<-'EOF' > /etc/default/grub
+		# GRUB boot loader configuration
+		GRUB_CMDLINE_LINUX="console=ttyS0,38400n8 net.ifnames=0 elevator=noop scsi_mod.use_blk_mq=Y"
+		GRUB_PRELOAD_MODULES="part_gpt part_msdos"
+		GRUB_TIMEOUT=0
+		GRUB_DISABLE_RECOVERY=true
+	EOF
+	grub-mkconfig -o /boot/grub/grub.cfg
+EOS
