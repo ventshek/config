@@ -34,26 +34,26 @@ cat > /etc/hosts <<EOF
 EOF
 # Edit Mkinitcpio Hooks
 sed -i 's/HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)/HOOKS=(base udev autodetect keyboard modconf block encrypt lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
-# Run Mkinitcpio 
+# Run Mkinitcpio
 mkinitcpio -p linux-lts
 # Uncomment Wheel in sudoers
 sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
 # Add user to sudoers etc
-useradd -m -d /home/user -G wheel -s /bin/bash "$usr"
-sudo usermod -G tor user
-sudo usermod -G network user
-sudo usermod -G vboxusers user
+useradd -m -d /home/user -g wheel,tor,network,vboxusers,disk -s /bin/bash "$usr"
 # Set root passwd
 echo "$rt":"$rtpw" | chpasswd
 # Set user passwd
 echo "$usr":"$usrpw" | chpasswd
 # Install yay
+cd /
 git clone https://aur.archlinux.org/yay.git
-cd yay
-sudo -u user makepkg --quiet --noprogressbar --noconfirm -si
-cd 
-rm yay
-yay --quiet --noprogressbar --noconfirm -Syyu octopi
+mv yay /home/user/Desktop/yay
+cd /home/user/Desktop/yay
+chown -R user:user /home/user/Desktop/yay
+sudo -u user makepkg --noconfirm -si
+cd
+rm /home/user/Desktop/yay
+yay --noprogressbar --noconfirm -Syyu octopi
 # Rewrite Grub
 rm /etc/default/grub
 cat > /etc/default/grub <<EOF
