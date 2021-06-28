@@ -10,9 +10,9 @@ localeconf=/etc/locale.conf
 uuid=$(blkid -o value -s UUID /dev/sda3)
 # Directories
 grubcfg=/boot/grub/grub.cfg
-# Take input for luks2
+# Take input for passwords
 echo -n "Enter your luks2 password [ENTER]: "
-read luks2
+read luks1
 echo -n "Enter your root password [ENTER]: "
 read rtpw
 echo -n "Enter your user password [ENTER]: "
@@ -40,19 +40,20 @@ mkinitcpio -p linux-lts
 sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
 # Add user to sudoers etc
 useradd -m -d /home/user -G wheel -s /bin/bash "$usr"
-usermod -G vboxusers user
+sudo usermod -G tor user
+sudo usermod -G network user
+sudo usermod -G vboxusers user
 # Set root passwd
 echo "$rt":"$rtpw" | chpasswd
 # Set user passwd
 echo "$usr":"$usrpw" | chpasswd
-# Git yay
-git clone https://aur.archlinux.org/yay.git
-# Enter yay directory
-cd yay
 # Install yay
-makepkg --noconfirm -si
-# Leave yay directory
-cd
+git clone https://aur.archlinux.org/yay.git
+cd yay
+sudo -u user makepkg --quiet --noprogressbar --noconfirm -si
+cd 
+rm yay
+yay --quiet --noprogressbar --noconfirm -Syyu octopi
 # Rewrite Grub
 rm /etc/default/grub
 cat > /etc/default/grub <<EOF
@@ -95,13 +96,17 @@ cat > /etc/default/grub <<EOF
 		# Uncomment to disable generation of recovery mode menu entries
 		GRUB_DISABLE_RECOVERY=true
 EOF
-# Add scripts to desktop
-cat > /home/user/Update.sh <<EOF
+# Add scripts to desktop + make exec
+cat > /home/user/Desktop/Update.sh <<EOF
+#!/bin/bash
 sudo pacman -Syyu
 EOF
-cat > /home/user/System.sh <<EOF
+cat > /home/user/Desktop/System.sh <<EOF
+#!/bin/bash
 htop
 EOF
+chmod u+x /home/user/Desktop/Update.sh
+chmod u+x /home/user/Desktop/System.sh
 # Install Grub
 grub-install --target=x86_64-efi --efi-directory=/efi
 # Create Grub config
@@ -113,7 +118,7 @@ chmod 700 /root/secrets
 # Create subdirectory for key file
 head -c 64 /dev/urandom > /root/secrets/crypto_keyfile.bin && chmod 600 /root/secrets/crypto_keyfile.bin
 # Generate Keys
-echo "$luks2" | cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
+echo "$luks1" | cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
 # Edit Mkinitcpio Files
 sed -i 's/FILES=()/FILES=(\/root\/secrets\/crypto_keyfile.bin)/' /etc/mkinitcpio.conf
 # Run Mkinitcpio again
@@ -135,7 +140,7 @@ rm /innit.sh
 history -c
 # Completion message
 echo "******************Successfully Installed******************"
-echo "Grub Password = $luks2"
+echo "Grub Password = $luks1"
 echo "User Password = $usrpw"
 # Exit
 exit
