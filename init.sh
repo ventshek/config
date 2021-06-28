@@ -31,7 +31,7 @@ sfdisk --quiet --force -- "$disk" <<-'EOF'
 EOF
 echo "************************Initial Partitioning Complete************************"
 # Setup Luks
-echo -en "$luks2" | cryptsetup luksFormat --type luks2 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
+echo -en "$luks2" | cryptsetup luksFormat --type luks1 --use-random -S 1 -s 512 -h sha512 -i 5000 "$dev"
 # Open new partition
 echo -en "$luks2" | cryptsetup luksOpen "$dev" cryptlvm
 # Create physical volume
