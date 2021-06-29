@@ -39,7 +39,7 @@ mkinitcpio -p linux-lts
 # Uncomment Wheel in sudoers
 sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
 # Add user to sudoers etc
-useradd -m -d /home/user -g wheel,tor,network,vboxusers,disk -s /bin/bash "$usr"
+useradd -m -d /home/user -G wheel,tor,network,vboxusers,disk -s /bin/bash "$usr"
 # Set root passwd
 echo "$rt":"$rtpw" | chpasswd
 # Set user passwd
@@ -47,12 +47,12 @@ echo "$usr":"$usrpw" | chpasswd
 # Install yay
 cd /
 git clone https://aur.archlinux.org/yay.git
-mv yay /home/user/Desktop/yay
-cd /home/user/Desktop/yay
-chown -R user:user /home/user/Desktop/yay
+mv yay /home/user/
+cd /home/user
+chown -R user:user /home/user
 sudo -u user makepkg --noconfirm -si
 cd
-rm /home/user/Desktop/yay
+rm yay* && rm -R .git* && rm PKGBUILD && rm -R pkg && rm -R src
 yay --noprogressbar --noconfirm -Syyu octopi
 # Rewrite Grub
 rm /etc/default/grub
@@ -99,7 +99,7 @@ EOF
 # Add scripts to desktop + make exec
 cat > /home/user/Desktop/Update.sh <<EOF
 #!/bin/bash
-sudo pacman -Syyu
+sudo pacman --noprogressbar --noconfirm -Syyu
 EOF
 cat > /home/user/Desktop/System.sh <<EOF
 #!/bin/bash
@@ -133,7 +133,7 @@ pacman --noconfirm -Scc
 systemctl enable NetworkManager
 systemctl enable dhcpcd
 systemctl enable tor
-systemctl enable sddm
+systemctl enable gdm
 # Remove innit
 rm /innit.sh
 # Clear Bash History
