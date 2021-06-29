@@ -122,7 +122,9 @@
       "y": 6,
       "w": 2,
       "h": 2,
-      "url": "keepass.desktop"
+      "url": "keepass.desktop",
+      "showLabel": true,
+      "label": "KeePass"
     },
     {
       "x": 2,
@@ -130,6 +132,13 @@
       "w": 2,
       "h": 2,
       "url": "org.kde.kgpg.desktop"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "w": 2,
+      "h": 2,
+      "url": "sublime_text.desktop"
     }
   ],
   "tileScaleDefault": 0.8,
@@ -146,7 +155,7 @@
   "hideSearchFieldDefault": false,
   "hideSearchField": true,
   "searchFieldFollowsThemeDefault": false,
-  "searchFieldFollowsTheme": false,
+  "searchFieldFollowsTheme": true,
   "sidebarFollowsThemeDefault": false,
   "sidebarFollowsTheme": true,
   "tileLabelAlignmentDefault": "left",
@@ -162,7 +171,7 @@
   "favGridColsDefault": 6,
   "favGridCols": 6,
   "popupHeightDefault": 620,
-  "popupHeight": 620,
+  "popupHeight": 550,
   "sidebarButtonSizeDefault": 48,
   "sidebarButtonSize": 48,
   "sidebarIconSizeDefault": 30,
