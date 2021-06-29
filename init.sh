@@ -54,7 +54,7 @@ swapon -- "$swap"
 mount -- "$efi" "$efi_dir"
 echo "************************All Partitioning Complete************************"
 # Pacstrap all packages
-pacstrap "$mnt" --quiet --noprogressbar --noconfirm base linux-lts efibootmgr base-devel plasma kde-applicatons efitools linux-lts-headers go linux-firmware mkinitcpio lvm2 htop wget nano torbrowser-launcher e2fsprogs tor nyx vi git xf86-video-vesa gdm dhcpcd wpa_supplicant grub sudo fwbuilder intel-ucode virtualbox virtualbox-host-dkms
+pacstrap "$mnt" --quiet --noprogressbar --noconfirm base linux-lts efibootmgr base-devel plasma kde-applicatons-meta efitools linux-lts-headers go linux-firmware mkinitcpio lvm2 htop wget nano torbrowser-launcher e2fsprogs tor nyx vi git xf86-video-vesa gdm dhcpcd wpa_supplicant grub sudo fwbuilder intel-ucode virtualbox virtualbox-host-dkms
 # Generate fstab
 genfstab -U "$mnt" >> "$fstabdir"
 # Remove script
