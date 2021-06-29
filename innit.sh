@@ -10,6 +10,8 @@ localeconf=/etc/locale.conf
 uuid=$(blkid -o value -s UUID /dev/sda3)
 # Directories
 grubcfg=/boot/grub/grub.cfg
+disk=/dev/sda
+dev=/dev/sda3
 # Take input for passwords
 echo -n "Enter your luks2 password [ENTER]: "
 read luks1
@@ -112,6 +114,8 @@ chmod u+x /home/user/Desktop/Update.sh
 chmod u+x /home/user/Desktop/System.sh
 # Install Grub
 grub-install --target=x86_64-efi --efi-directory=/efi
+# Install Grub (BIOS)
+grub-install --target=i386-pc --recheck "$disk"
 # Create Grub config
 grub-mkconfig -o /boot/grub/grub.cfg
 # Create directory for secrets
@@ -121,7 +125,7 @@ chmod 700 /root/secrets
 # Create subdirectory for key file
 head -c 64 /dev/urandom > /root/secrets/crypto_keyfile.bin && chmod 600 /root/secrets/crypto_keyfile.bin
 # Generate Keys
-echo "$luks1" | cryptsetup -v luksAddKey -i 1 /dev/sda3 /root/secrets/crypto_keyfile.bin
+echo "$luks1" | cryptsetup -v luksAddKey -i 1 "$dev" /root/secrets/crypto_keyfile.bin
 # Edit Mkinitcpio Files
 sed -i 's/FILES=()/FILES=(\/root\/secrets\/crypto_keyfile.bin)/' /etc/mkinitcpio.conf
 # Run Mkinitcpio again
