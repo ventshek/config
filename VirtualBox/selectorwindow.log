@@ -1,0 +1,24 @@
+00:00:02.706886 VirtualBox GUI VM Selector Window 6.1.22 r144080 linux.amd64 (Jun 21 2021 10:09:41) release log
+00:00:02.706891 Log opened 2021-06-29T18:16:21.667101000Z
+00:00:02.706892 Build Type: release
+00:00:02.706897 OS Product: Linux
+00:00:02.706900 OS Release: 5.10.46-1-lts
+00:00:02.706902 OS Version: #1 SMP Wed, 23 Jun 2021 16:18:42 +0000
+00:00:02.706945 DMI Product Name: VMware7,1
+00:00:02.706964 DMI Product Version: None
+00:00:02.706974 Firmware type: UEFI
+00:00:02.708010 Secure Boot: Disabled
+00:00:02.708103 Host RAM: 1948MB total, 1183MB available
+00:00:02.708108 Executable: /usr/lib/virtualbox/VirtualBox
+00:00:02.708109 Process ID: 1129
+00:00:02.708110 Package type: LINUX_64BITS_GENERIC (OSE)
+00:00:02.708177 Qt version: 5.15.2
+00:00:02.772284 GUI: UIMediumEnumerator: Medium-enumeration started...
+00:00:03.322723 GUI: UIDesktopWidgetWatchdog::sltHandleHostScreenAvailableGeometryCalculated: Screen 0 work area is actually resized to: 0x0 x 1920x1044
+00:00:03.336586 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:04:01.079339 GUI: UIMediumEnumerator: Medium-enumeration started...
+00:04:01.499177 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:05:36.057916 GUI: UIMediumEnumerator: Medium-enumeration started...
+00:05:36.135588 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:06:52.689161 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:07:01.485832 ERROR [COM]: aRC=NS_ERROR_UNEXPECTED (0x8000ffff) aIID={c0447716-ff5a-4795-b57a-ecd5fffa18a4} aComponent={SessionWrap} aText={The session is not locked (session state: Unlocked)}, preserve=false aResultDetail=0

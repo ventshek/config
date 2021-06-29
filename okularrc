@@ -1,0 +1,22 @@
+[Desktop Entry]
+FullScreen=false
+
+[MainWindow]
+State=AAAA/wAAAAD9AAAAAAAABQAAAAKEAAAABAAAAAQAAAAIAAAACPwAAAACAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgEAAAAA/////wAAAAAAAAAAAAAAAgAAAAEAAAAiAGEAbgBuAG8AdABhAHQAaQBvAG4AVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAA
+ToolBarsMovable=Disabled
+Virtual1 XPosition 1920x1080=94
+Virtual1 YPosition 1920x1080=137
+
+[Recent Files]
+File1[$e]=/usr/share/kde4/apps/kconf_update/disable_kmix.upd
+File2[$e]=/usr/share/accounts/services/kde/google-drive.service
+File3[$e]=$HOME/.kde4/share/config/kdeglobals
+File4[$e]=$HOME/.config/KDE/UserFeedback.conf
+File5[$e]=$HOME/.config/kde.org/systemsettings.conf
+File6[$e]=$HOME/.config/kde.org/UserFeedback.org.kde.plasmashell.conf
+Name1[$e]=disable_kmix.upd
+Name2[$e]=google-drive.service
+Name3[$e]=kdeglobals
+Name4[$e]=UserFeedback.conf
+Name5[$e]=systemsettings.conf
+Name6[$e]=UserFeedback.org.kde.plasmashell.conf

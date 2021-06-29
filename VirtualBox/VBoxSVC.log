@@ -1,0 +1,63 @@
+00:00:00.020013 main     VirtualBox XPCOM Server 6.1.22 r144080 linux.amd64 (Jun 21 2021 10:09:41) release log
+00:00:00.020019 main     Log opened 2021-06-29T18:16:21.096175000Z
+00:00:00.020020 main     Build Type: release
+00:00:00.020026 main     OS Product: Linux
+00:00:00.020028 main     OS Release: 5.10.46-1-lts
+00:00:00.020031 main     OS Version: #1 SMP Wed, 23 Jun 2021 16:18:42 +0000
+00:00:00.020080 main     DMI Product Name: VMware7,1
+00:00:00.020107 main     DMI Product Version: None
+00:00:00.020118 main     Firmware type: UEFI
+00:00:00.021449 main     Secure Boot: Disabled
+00:00:00.021546 main     Host RAM: 1948MB total, 1187MB available
+00:00:00.021551 main     Executable: /usr/lib/virtualbox/VBoxSVC
+00:00:00.021552 main     Process ID: 1160
+00:00:00.021553 main     Package type: LINUX_64BITS_GENERIC (OSE)
+00:00:00.025890 main     IPC socket path: /tmp/.vbox-user-ipc/ipcd
+00:00:00.190255 nspr-2   VirtualBox: object creation starts
+00:00:00.190465 nspr-2   Home directory: '/home/user/.config/VirtualBox'
+00:00:00.217704 nspr-2   Loading settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:00:00.277974 nspr-2   Successfully initialised host USB using sysfs
+00:00:00.284678 nspr-2   Failed to retrive disk info: getDiskName(/dev/mapper/gg-root) --> gg-root
+00:00:00.284924 nspr-2   HostDnsMonitor: initializing
+00:00:00.285213 nspr-2   NAT: resolv.conf: nameserver 172.16.247.2
+00:00:00.285226 nspr-2   HostDnsMonitor: updating information
+00:00:00.285237 nspr-2   HostDnsMonitor: old information
+00:00:00.285239 nspr-2     no server entries
+00:00:00.285241 nspr-2     no domain set
+00:00:00.285242 nspr-2     no search string entries
+00:00:00.285244 nspr-2   HostDnsMonitor: new information
+00:00:00.285246 nspr-2     server 1: 172.16.247.2
+00:00:00.285248 nspr-2     domain: localdomain
+00:00:00.285249 nspr-2     no search string entries
+00:00:00.318903 nspr-2   VD: VDInit finished with VINF_SUCCESS
+00:00:00.336761 nspr-2   ERROR [COM]: aRC=NS_ERROR_FAILURE (0x80004005) aIID={027bc463-929c-40e8-bf16-fea557cd8e7e} aComponent={SystemPropertiesWrap} aText={Cannot determine default Guest Additions ISO location. Most likely they are not available}, preserve=false aResultDetail=0
+00:00:00.339503 nspr-2   VirtualBox: object created
+00:02:08.499450 nspr-4   Import settings with version "1.15-linux"
+00:02:08.499525 nspr-4   ERROR [COM]: aRC=VBOX_E_OBJECT_NOT_FOUND (0x80bb0001) aIID={d0a0163f-e254-4e5b-a1f2-011cf991c38d} aComponent={VirtualBoxWrap} aText={Could not find a registered machine named 'Whonix-Gateway-XFCE'}, preserve=false aResultDetail=0
+00:02:08.499824 nspr-4   ERROR [COM]: aRC=VBOX_E_FILE_ERROR (0x80bb0004) aIID={ad47ad09-787b-44ab-b343-a082a3f2dfb1} aComponent={MediumWrap} aText={Could not find file for the medium '/home/user/VirtualBox VMs/Whonix-Gateway-XFCE/Whonix-XFCE-15.0.1.7.3-disk001.vmdk' (VERR_FILE_NOT_FOUND)}, preserve=false aResultDetail=-102
+00:02:08.499847 nspr-4   Import settings with version "1.15-linux"
+00:02:08.499876 nspr-4   ERROR [COM]: aRC=VBOX_E_OBJECT_NOT_FOUND (0x80bb0001) aIID={d0a0163f-e254-4e5b-a1f2-011cf991c38d} aComponent={VirtualBoxWrap} aText={Could not find a registered machine named 'Whonix-Workstation-XFCE'}, preserve=false aResultDetail=0
+00:02:08.499919 nspr-4   ERROR [COM]: aRC=VBOX_E_FILE_ERROR (0x80bb0004) aIID={ad47ad09-787b-44ab-b343-a082a3f2dfb1} aComponent={MediumWrap} aText={Could not find file for the medium '/home/user/VirtualBox VMs/Whonix-Workstation-XFCE/Whonix-XFCE-15.0.1.7.3-disk002.vmdk' (VERR_FILE_NOT_FOUND)}, preserve=false aResultDetail=-102
+00:03:54.234331 createImport Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:03:55.668716 ApplImp  Saving settings file "/home/user/VirtualBox VMs/Whonix-Gateway-XFCE/Whonix-Gateway-XFCE.vbox" with version "1.15-linux"
+00:03:55.670906 ApplImp  Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:05:31.881683 createImport Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:05:31.885950 ApplImp  Saving settings file "/home/user/VirtualBox VMs/Whonix-Workstation-XFCE/Whonix-Workstation-XFCE.vbox" with version "1.15-linux"
+00:05:31.887868 ApplImp  Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:06:39.388991 nspr-4   Launched VM: 1073750880 pid: 1285 (0x505) frontend: GUI/Qt name: Whonix-Gateway-XFCE
+00:06:47.980001 nspr-3   ERROR [COM]: aRC=VBOX_E_OBJECT_NOT_FOUND (0x80bb0001) aIID={70401eef-c8e9-466b-9660-45cb3e9979e4} aComponent={ExtPackManagerWrap} aText={No extension pack by the name 'Oracle VM VirtualBox Extension Pack' was found}, preserve=false aResultDetail=0
+00:06:48.561803 nspr-6   ERROR [COM]: aRC=VBOX_E_IPRT_ERROR (0x80bb0005) aIID={85632c68-b5bb-4316-a900-5eb28d3413df} aComponent={SessionMachine} aText={Saved screenshot data is not available (VERR_NOT_SUPPORTED)}, preserve=false aResultDetail=-37
+00:06:49.918415 nspr-2   Saving settings file "/home/user/VirtualBox VMs/Whonix-Gateway-XFCE/Whonix-Gateway-XFCE.vbox" with version "1.15-linux"
+00:06:50.509696 nspr-3   Saving settings file "/home/user/VirtualBox VMs/Whonix-Gateway-XFCE/Whonix-Gateway-XFCE.vbox" with version "1.15-linux"
+00:07:00.333077 nspr-4   Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:07:00.486246 nspr-6   Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:07:00.511371 nspr-8   Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:07:00.532335 nspr-2   Saving settings file "/home/user/.config/VirtualBox/VirtualBox.xml" with version "1.12-linux"
+00:07:06.101925 main     VirtualBox: object deletion starts
+00:07:06.102410 main     ERROR [COM]: aRC=VBOX_E_OBJECT_IN_USE (0x80bb000c) aIID={ad47ad09-787b-44ab-b343-a082a3f2dfb1} aComponent={MediumWrap} aText={Medium '/home/user/VirtualBox VMs/Whonix-Gateway-XFCE/Whonix-XFCE-15.0.1.7.3-disk001.vdi' cannot be closed because it is still attached to 1 virtual machines}, preserve=false aResultDetail=0
+00:07:06.102797 main     ERROR [COM]: aRC=VBOX_E_OBJECT_IN_USE (0x80bb000c) aIID={ad47ad09-787b-44ab-b343-a082a3f2dfb1} aComponent={MediumWrap} aText={Medium '/home/user/VirtualBox VMs/Whonix-Workstation-XFCE/Whonix-XFCE-15.0.1.7.3-disk002.vdi' cannot be closed because it is still attached to 1 virtual machines}, preserve=false aResultDetail=0
+00:07:06.103524 main     HostDnsMonitor: shutting down ...
+00:07:06.137989 main     HostDnsMonitor: shut down
+00:07:06.444463 Watcher  ERROR [COM]: aRC=E_ACCESSDENIED (0x80070005) aIID={d0a0163f-e254-4e5b-a1f2-011cf991c38d} aComponent={VirtualBoxWrap} aText={The object is not ready}, preserve=false aResultDetail=0
+00:07:11.178302 main     {00007fe644016bc0} HostPowerServiceLinux::~HostPowerServiceLinux: RTThreadWait() for 5000 ms failed with VERR_TIMEOUT
+00:07:11.178853 main     VirtualBox: object deleted

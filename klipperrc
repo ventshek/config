@@ -1,0 +1,6 @@
+[General]
+IgnoreImages=false
+KeepClipboardContents=false
+PreventEmptyClipboard=false
+SelectionTextOnly=false
+Version=5.22.2
