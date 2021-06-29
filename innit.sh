@@ -49,11 +49,14 @@ cd /
 git clone https://aur.archlinux.org/yay.git
 mv yay /home/user/
 cd /home/user
-chown -R user:user /home/user
+wget https://quantum-mirror.hu/mirrors/pub/whonix/ova/15.0.1.7.3/Whonix-XFCE-15.0.1.7.3.ova
+wget https://quantum-mirror.hu/mirrors/pub/whonix/ova/15.0.1.7.3/Whonix-CLI-15.0.1.7.3.ova
+cd /home/user/yay
+chown -R user:user /home/user/yay
 sudo -u user makepkg --noconfirm -si
 cd
 rm yay* && rm -R .git* && rm PKGBUILD && rm -R pkg && rm -R src
-yay --noprogressbar --noconfirm -Syyu octopi
+yay --noprogressbar --noconfirm -Syyu octopi sublime-text-3
 # Rewrite Grub
 rm /etc/default/grub
 cat > /etc/default/grub <<EOF
@@ -134,6 +137,7 @@ systemctl enable NetworkManager
 systemctl enable dhcpcd
 systemctl enable tor
 systemctl enable gdm
+systemctl enable ufw
 # Remove innit
 rm /innit.sh
 # Clear Bash History
